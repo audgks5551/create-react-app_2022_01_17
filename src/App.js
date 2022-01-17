@@ -1,39 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 function App() {
-  const [counter, setCounter] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const onClick = () => {
-    setCounter((prev) => prev + 1);
-  }
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  
   const onChange = (event) => {
-    setKeyword(event.target.value)
+    console.log(event.target.value);
+    setToDo(event.target.value);
   }
-
-  useEffect(() => {
-    console.log("한번만 실행됨", keyword);
-  }, []);
-  useEffect(() => {
-    console.log("클릭", counter);
-  }, [counter]);
-  useEffect(() => {
-    if (keyword !== "" && keyword.length > 5) {
-      console.log("검색", keyword);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (toDo === "") {
+      return;
     }
-  }, [keyword]);
+    setToDos((currentArray) => [toDo, ...currentArray]);
+    setToDo("");
+  }
+  console.log(toDos);
 
   return (
     <div>
-      <div>
-        <input value={keyword} onChange={onChange} type="text" />
-      </div>
-      <div>
-        <span>{counter}</span>
-      </div>
-      <div>
-        <button onClick={onClick}>클릭</button>
-      </div>
+      <h2>할 일 리스트</h2>
+      <form onSubmit={onSubmit}>
+        <input 
+          type="text"
+          onChange={onChange}
+          value={toDo}
+        />
+        <button>저장</button>
+      </form>
+      <ul>
+        {toDos.map((item, index) => <li key={index}>{item}</li>)}
+      </ul>
     </div>
   );
 }
